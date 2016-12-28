@@ -184,6 +184,10 @@ void Solver::readfile(unsigned size, std::string filename) {
 
 void Solver::output() {
 	std::ofstream out(outFile);
+	if (!solved) {
+		out << "No solution\n";
+		return;
+	}
 	char *conv = new char[5] {' ', '<', '>', '^', 'v'};
 	for (unsigned i = 0; i < 2 * size - 1; i++) {
 		for (unsigned j = 0; j < 2 * size - 1; j++) {
