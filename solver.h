@@ -1,3 +1,6 @@
+#ifndef SOLVER_H_
+#define SOLVER_H_
+
 #include <set>
 #include <string>
 #include <fstream>
@@ -52,3 +55,4 @@ public:
 	std::string outFile;
 };
 
+#endif
