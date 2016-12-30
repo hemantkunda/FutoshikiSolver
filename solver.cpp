@@ -30,18 +30,18 @@ bool Solver::solve() {
 }
 
 void Solver::backtrack(int r, int c) {
-	if (r >= 2 * size) {
+	if ((unsigned)r >= 2 * size) {
 		solved = true;
 		saveSolution();
 		return;
 	}
 	int nextR = r;
 	int nextC = c + 2;
-	if (nextC >= 2 * size) {
+	if ((unsigned)nextC >= 2 * size) {
 		nextC = 0;
 		nextR = r + 2;
 	}
-	int *cand = constructCandidates(r, c);
+	unsigned *cand = constructCandidates(r, c);
 	for (unsigned i = 1; i < size + 1; i++) {
 		if (cand[i] == 0) {
 			continue;
@@ -63,31 +63,31 @@ void Solver::saveSolution() {
 	}
 }
 
-int* Solver::constructCandidates(int r, int c) {
-	int *cand = new int[size + 1];
+unsigned* Solver::constructCandidates(int r, int c) {
+	unsigned *cand = new unsigned[size + 1];
 	for (unsigned i = 1; i <= size; i++) {
 		cand[i] = i;
 	}
 	for (unsigned i = 0; i < 2 * size - 1; i += 2) {
-		if (i != c) {
+		if (i != (unsigned)c) {
 			cand[grid[r][i]] = 0;
 		}
-		if (i != r) {
+		if (i != (unsigned)r) {
 			cand[grid[i][c]] = 0;
 		}
 	}
 	//examine this location's relationship to neighboring ones
 	//above
 	if (r - 1 >= 0) {
-		int ineqA = grid[r - 1][c], above = grid[r - 2][c];
+		unsigned ineqA = grid[r - 1][c], above = grid[r - 2][c];
 		switch (ineqA) {
 			case 3:
-				for (int i = 1; i <= above; i++) {
+				for (unsigned i = 1; i <= above; i++) {
 					cand[i] = 0;
 				}
 				break;
 			case 4:
-				for (int i = above; i <= size; i++) {
+				for (unsigned i = above; i <= size; i++) {
 					cand[i] = 0;
 				}
 			default:
@@ -96,15 +96,15 @@ int* Solver::constructCandidates(int r, int c) {
 	}
 	//left
 	if (c - 1 >= 0) {
-		int ineqL = grid[r][c - 1], left = grid[r][c - 2];
+		unsigned ineqL = grid[r][c - 1], left = grid[r][c - 2];
 		switch (ineqL) {
 			case 1:
-				for (int i = 1; i <= left; i++) {
+				for (unsigned i = 1; i <= left; i++) {
 					cand[i] = 0;
 				}
 				break;
 			case 2:
-				for (int i = left; i <= size; i++) {
+				for (unsigned i = left; i <= size; i++) {
 					cand[i] = 0;
 				}
 				break;

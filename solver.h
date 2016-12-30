@@ -30,7 +30,7 @@ private:
 	// and column (c) by considering existing values in that same row/column as
 	// well as any inequalities that must be satisfied by this location and the
 	// ones above/to the left.
-	int* constructCandidates(int r, int c);
+	unsigned* constructCandidates(int r, int c);
 
 	// tries all possible values at the specified row/col and repeats with the
 	// next location in line - starts at the first row and processes each row
