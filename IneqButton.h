@@ -6,6 +6,8 @@
 #include <QIcon>
 #include <QSize>
 #include <QPixmap>
+#include <QString>
+
 #include <string>
 
 class IneqButton : public QPushButton {
@@ -13,6 +15,7 @@ class IneqButton : public QPushButton {
 public:
 	IneqButton(int *loc, bool horizontal);
 	~IneqButton();
+	void reload();
 
 public slots:
 	void toggle();
