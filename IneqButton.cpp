@@ -18,7 +18,7 @@ IneqButton::IneqButton(int *loc, bool horizontal) {
 	this->current = 0;
 	this->loc = loc;
 	connect(this, SIGNAL(clicked()), this, SLOT(toggle()));
-	this->setFixedSize(QSize(35, 35));
+	this->setFixedSize(QSize(25, 25));
 }
 
 IneqButton::~IneqButton() {

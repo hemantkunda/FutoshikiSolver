@@ -6,9 +6,9 @@ NumberButton::NumberButton(int *loc, int size) {
 	connect(this, SIGNAL(clicked()), this, SLOT(increment()));
 	setText(QString(""));
 	QFont font;
-	font.setPointSize(30);
+	font.setPointSize(25);
 	setFont(font);
-	setFixedSize(QSize(75, 75));
+	setFixedSize(QSize(55, 55));
 }
 
 NumberButton::~NumberButton() {
