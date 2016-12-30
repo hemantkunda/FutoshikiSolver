@@ -10,6 +10,7 @@ class NumberButton : public QPushButton {
 public:
 	NumberButton(int *loc, int size);
 	~NumberButton();
+	void reload();
 
 public slots:
 	void increment();
@@ -17,6 +18,6 @@ public slots:
 private:
 	int size;
 	int *loc;
-}
+};
 
 #endif
