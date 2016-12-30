@@ -51,6 +51,7 @@ public:
 	unsigned size;
 	bool solved;
 	int **grid;
+	bool **constant;
 	int **solution;
 	std::string outFile;
 };

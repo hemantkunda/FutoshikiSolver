@@ -4,9 +4,11 @@ Solver::Solver(unsigned size, std::string inFile, std::string outFile) {
 	this->size = size;
 	this->solved = false;
 	this->outFile = outFile;
-	this->grid = new int*[2 *size - 1];
+	this->grid = new int*[2 * size - 1];
+	this->constant = new bool*[2 * size - 1];
 	for (unsigned i = 0; i < 2 * size - 1; i++) {
 		grid[i] = new int[2 * size - 1];
+		constant[i] = new bool[2 * size - 1];
 	}
 	readfile(size, inFile);
 }
@@ -14,7 +16,9 @@ Solver::Solver(unsigned size, std::string inFile, std::string outFile) {
 Solver::~Solver() {
 	for (unsigned i = 0; i < 2 * size - 1; i++) {
 		delete [] grid[i];
+		delete [] constant[i];
 	}
+	delete [] constant;
 	delete [] grid;
 	if (solved) {
 		for (unsigned i = 0; i < 2 * size - 1; i++) {
@@ -41,16 +45,21 @@ void Solver::backtrack(int r, int c) {
 		nextC = 0;
 		nextR = r + 2;
 	}
-	unsigned *cand = constructCandidates(r, c);
-	for (unsigned i = 1; i < size + 1; i++) {
-		if (cand[i] == 0) {
-			continue;
-		}
-		grid[r][c] = cand[i];
+	if (constant[r][c]) {
 		backtrack(nextR, nextC);
-		grid[r][c] = 0;
 	}
-	delete [] cand;
+	else {
+		unsigned *cand = constructCandidates(r, c);
+		for (unsigned i = 1; i < size + 1; i++) {
+			if (cand[i] == 0) {
+				continue;
+			}
+			grid[r][c] = cand[i];
+			backtrack(nextR, nextC);
+			grid[r][c] = 0;
+		}
+		delete [] cand;
+	}
 }
 
 void Solver::saveSolution() {
@@ -77,7 +86,7 @@ unsigned* Solver::constructCandidates(int r, int c) {
 		}
 	}
 	//examine this location's relationship to neighboring ones
-	//above
+	// above
 	if (r - 1 >= 0) {
 		unsigned ineqA = grid[r - 1][c], above = grid[r - 2][c];
 		switch (ineqA) {
@@ -90,11 +99,12 @@ unsigned* Solver::constructCandidates(int r, int c) {
 				for (unsigned i = above; i <= size; i++) {
 					cand[i] = 0;
 				}
+				break;
 			default:
 				break;
 		}
 	}
-	//left
+	// left
 	if (c - 1 >= 0) {
 		unsigned ineqL = grid[r][c - 1], left = grid[r][c - 2];
 		switch (ineqL) {
@@ -112,6 +122,46 @@ unsigned* Solver::constructCandidates(int r, int c) {
 				break;
 		}
 	}
+	// right
+	if ((unsigned)(c + 1) < 2 * size - 1) {
+		unsigned ineqR = grid[r][c + 1], right = grid[r][c + 2];
+		if (right != 0) {
+			switch (ineqR) {
+				case 1:
+					for (unsigned i = right; i <= size; i++) {
+						cand[i] = 0;
+					}
+					break;
+				case 2:
+					for (unsigned i = 1; i <= right; i++) {
+						cand[i] = 0;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	// below
+	if ((unsigned)(r + 1) < 2 * size - 1) {
+		unsigned ineqT = grid[r + 1][c], below = grid[r + 2][c];
+		if (below != 0) {
+			switch (ineqT) {
+				case 3:
+					for (unsigned i = below; i <= size; i++) {
+						cand[i] = 0;
+					}
+					break;
+				case 4:
+					for (unsigned i = 1; i <= below; i++) {
+						cand[i] = 0;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	}
 	return cand;
 }
 
@@ -125,12 +175,15 @@ void Solver::readfile(unsigned size, std::string filename) {
 				if (j % 2 == 0) {
 					if (line[j] != ' ') {
 						grid[i][j] = (int)(line[j] - '0');
+						constant[i][j] = (grid[i][j] != 0);
 					}
 					else {
 						grid[i][j] = 0;
+						constant[i][j] = false;
 					}
 				}
 				else {
+					constant[i][j] = true;
 					if (line[j] == ' ') {
 						grid[i][j] = 0;
 					}
@@ -171,14 +224,9 @@ void Solver::readfile(unsigned size, std::string filename) {
 				else {
 					grid[i][j] = 0;
 				}
+				constant[i][j] = true;
 			}
 		}
-	}
-	for (unsigned i = 0; i < 2 * size - 1; i++) {
-		for (unsigned j = 0; j < 2 * size - 1; j++) {
-			std::cout << grid[i][j];
-		}
-		std::cout << "\n";
 	}
 }
 
