@@ -19,7 +19,6 @@ SolverUI::~SolverUI() {
 }
 
 std::string SolverUI::exportPuzzle() {
-	std::cout << size << "\n";
 	QInputDialog *dialog = new QInputDialog();
 	dialog->setInputMode(QInputDialog::TextInput);
 	dialog->setCancelButtonText(QString("Cancel"));
@@ -36,17 +35,6 @@ std::string SolverUI::exportPuzzle() {
 			name = std::string(time);
 		}
 		char *conv = new char[5] {' ', '<', '>', '^', 'v'};
-		for (int i = 0; i < 2 * size - 1; i++) {
-			for (int j = 0; j < 2 * size - 1; j++) {
-				if (i % 2 == 0 && j % 2 == 0) {
-					std::cout << board[i][j];
-				}
-				else {
-					std::cout << conv[board[i][j]];
-				}
-			}
-			std::cout << "\n";
-		}
 		filename = "puzzle_" + name;
 		std::ofstream out(filename + ".in");
 		for (int i = 0; i < 2 * size - 1; i++) {
@@ -173,6 +161,7 @@ void SolverUI::buildUI(int size, bool init) {
 	// recreate
 	this->size = size;
 	this->layout = new QHBoxLayout(this);
+	layout->setSizeConstraint(QLayout::SetFixedSize);
 	this->board = new int*[2 * size - 1];
 	for (int i = 0; i < 2 * size - 1; i++) {
 		board[i] = new int[2 * size - 1];
@@ -189,14 +178,17 @@ void SolverUI::buildUI(int size, bool init) {
 	title->setText(QString("Futoshiki Solver"));
 	settings->addWidget(title);
 
-	sizes = new QComboBox();
-	sizes->addItem(QString("4x4"));
-	sizes->addItem(QString("5x5"));
-	sizes->addItem(QString("6x6"));
-	sizes->addItem(QString("7x7"));
-	sizes->addItem(QString("8x8"));
-	sizes->addItem(QString("9x9"));
-	connect(sizes, SIGNAL(currentIndexChanged(int)), this, SLOT(toggleSize(int)));
+	if (init) {
+		sizes = new QComboBox();
+		sizes->addItem(QString("4x4"));
+		sizes->addItem(QString("5x5"));
+		sizes->addItem(QString("6x6"));
+		sizes->addItem(QString("7x7"));
+		sizes->addItem(QString("8x8"));
+		sizes->addItem(QString("9x9"));
+		sizes->setCurrentIndex(size - 4);
+		connect(sizes, SIGNAL(currentIndexChanged(int)), this, SLOT(toggleSize(int)));
+	}
 	settings->addWidget(sizes);
 
 	solveButton = new QPushButton();
