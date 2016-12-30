@@ -31,3 +31,12 @@ Grid::~Grid() {
 	ineqButtons.clear();
 	delete layout;
 }
+
+void Grid::reload() {
+	for (unsigned i = 0; i < numButtons.size(); i++) {
+		numButtons[i]->reload();
+	}
+	for (unsigned i = 0; i < ineqButtons.size(); i++) {
+		ineqButtons[i]->reload();
+	}
+}
