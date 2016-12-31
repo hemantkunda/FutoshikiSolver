@@ -62,6 +62,11 @@ void SolverUI::clear() {
 	grid->reload();
 }
 
+void SolverUI::load() {
+	QString fileName = QFileDialog::getOpenFileName(this, QString("Open..."), ".");
+	readfile(fileName.toStdString());
+}
+
 void SolverUI::solve() {
 	std::string filename = exportPuzzle();
 	if (filename.size() == 0) {
@@ -79,8 +84,23 @@ void SolverUI::solve() {
 		delete message;
 		return;
 	}
-	in.clear();
-	in.seekg(0, std::ios::beg);
+	in.close();
+	readfile(filename + ".out");
+}
+
+void SolverUI::readfile(std::string filename) {
+	std::ifstream in(filename);
+	std::string line;
+	std::getline(in, line);
+	std::stringstream ss(line);
+	int newSize;
+	ss >> newSize;
+	if (size != newSize) {
+		buildUI(newSize, false);
+		sizes->blockSignals(true);
+		sizes->setCurrentIndex(newSize - 4);
+		sizes->blockSignals(false);
+	}
 	for (int i = 0; i < 2 * size - 1; i++) {
 		std::getline(in, line);
 		if (i % 2 == 0) {
@@ -149,6 +169,7 @@ void SolverUI::buildUI(int size, bool init) {
 	if (!init) {
 		delete solveButton;
 		delete clearButton;
+		delete loadButton;
 		delete title;
 		delete settings;
 		delete grid;
@@ -186,7 +207,6 @@ void SolverUI::buildUI(int size, bool init) {
 		sizes->addItem(QString("7x7"));
 		sizes->addItem(QString("8x8"));
 		sizes->addItem(QString("9x9"));
-		sizes->setCurrentIndex(size - 4);
 		connect(sizes, SIGNAL(currentIndexChanged(int)), this, SLOT(toggleSize(int)));
 	}
 	settings->addWidget(sizes);
@@ -195,6 +215,11 @@ void SolverUI::buildUI(int size, bool init) {
 	solveButton->setText(QString("Solve"));
 	connect(solveButton, SIGNAL(clicked()), this, SLOT(solve()));
 	settings->addWidget(solveButton);
+
+	loadButton = new QPushButton();
+	loadButton->setText(QString("Load"));
+	connect(loadButton, SIGNAL(clicked()), this, SLOT(load()));
+	settings->addWidget(loadButton);
 
 	clearButton = new QPushButton();
 	clearButton->setText(QString("Clear"));

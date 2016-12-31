@@ -14,6 +14,7 @@
 #include <QColor>
 #include <QString>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QStringList>
 
 #include <iostream>
@@ -37,10 +38,12 @@ public slots:
 	void solve();
 	void clear();
 	void toggleSize(int index);
+	void load();
 
 private:
 	std::string exportPuzzle();
 	void buildUI(int size, bool init);
+	void readfile(std::string fileName);
 
 private:
 	Grid *grid;
@@ -50,6 +53,7 @@ private:
 	QComboBox *sizes;
 	QPushButton *solveButton;
 	QPushButton *clearButton;
+	QPushButton *loadButton;
 
 	int **board;
 	int size;
