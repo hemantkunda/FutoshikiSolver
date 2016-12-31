@@ -168,6 +168,7 @@ unsigned* Solver::constructCandidates(int r, int c) {
 void Solver::readfile(unsigned size, std::string filename) {
 	std::ifstream in(filename);
 	std::string line;
+	std::getline(in, line);
 	for (unsigned i = 0; i < 2 * size - 1; i++) {
 		std::getline(in, line);
 		if (i % 2 == 0) {
@@ -236,6 +237,7 @@ void Solver::output() {
 		out << "No solution\n";
 		return;
 	}
+	out << size << "\n";
 	char *conv = new char[5] {' ', '<', '>', '^', 'v'};
 	for (unsigned i = 0; i < 2 * size - 1; i++) {
 		for (unsigned j = 0; j < 2 * size - 1; j++) {
