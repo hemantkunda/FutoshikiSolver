@@ -1,5 +1,54 @@
 #include "Util.h"
 
+bool Util::verify(std::string filename, int size) {
+	std::ifstream in(filename);
+	std::string line;
+	std::getline(in, line);
+	int t;
+	std::stringstream ss(line);
+	ss >> t;
+	if (ss.fail()) {
+		return false;
+	}
+	for (int i = 0; i < 2 * size - 1; i++) {
+		std::getline(in, line);
+		if (i % 2 == 0) {
+			for (int j = 0; j < 2 * size - 1; j++) {
+				if (j % 2 == 0) {
+					if (line[j] != ' ') {
+						ss << line[j];
+						ss >> t;
+						if (ss.fail()) {
+							return false;
+						}
+					}
+				}
+				else {
+					if (line[j] != ' ' && line[j] != '<' && line[j] != '>' 
+									   && line[j] != '^' && line[j] != 'v') {
+						return false;
+					}
+				}
+			}
+		}
+		else {
+			for (int j = 0; j < 2 * size - 1; j++) {
+				if (j % 2 == 0) {
+					if (line[j] != ' ' && line[j] != '<' && line[j] != '>' 
+									   && line[j] != '^' && line[j] != 'v') {
+						return false;
+					}
+				}
+				else if (line[j] != ' ') {
+					return false;
+				}
+			}
+		}
+	}
+	in.close();
+	return true;
+}
+
 void Util::readfile(std::string filename, int **array, int size) {
 	std::ifstream in(filename);
 	std::string line;
