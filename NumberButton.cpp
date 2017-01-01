@@ -5,9 +5,11 @@ NumberButton::NumberButton(int *loc, int size) {
 	this->loc = loc;
 	connect(this, SIGNAL(clicked()), this, SLOT(increment()));
 	setText(QString(""));
+	setStyleSheet(QString("background-color: white; border: none;"));
 	QFont font;
 	font.setPointSize(25);
 	setFont(font);
+	setFocusPolicy(Qt::NoFocus);
 	setFixedSize(QSize(55, 55));
 }
 
