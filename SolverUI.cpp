@@ -73,6 +73,7 @@ void SolverUI::solve() {
 	if (line[0] == 'N') {
 		QMessageBox *message = new QMessageBox();
 		message->setText("The inputted puzzle has no solution.");
+		message->exec();
 		delete message;
 		return;
 	}
