@@ -7,6 +7,7 @@ The sequence returns to a blank square (representing an unknown value) before re
 
 Clicking the smaller squares will cycle through possible inequality relationships between 
 adjacent larger squares. The sequence is:
+
 1. left/top < right/bottom 
 2. left/top > right/bottom  
 3. no relationship between left/top and right/bottom.
@@ -16,6 +17,7 @@ the currently inputted puzzle.
 
 The application supports a loading functionality that allows the user to read in a puzzle
 from a text file. The accepted format is as follows:
+
 1. The first line contains an integer n such that 4 <= n <= 9
 2. The next n lines contain 2n - 1 integers representing a row in the puzzle
 3. If n % 2 == 0, then the odd-indexed integers represent intra-row inequality relationships,
