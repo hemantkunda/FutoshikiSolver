@@ -5,7 +5,7 @@ NumberButton::NumberButton(int *loc, int size) {
 	this->loc = loc;
 	connect(this, SIGNAL(clicked()), this, SLOT(increment()));
 	setText(QString(""));
-	setStyleSheet(QString("background-color: white; border: none;"));
+	setStyleSheet(QString("background-color: white; border: 1px solid black;"));
 	QFont font;
 	font.setPointSize(25);
 	setFont(font);

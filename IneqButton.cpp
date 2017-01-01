@@ -17,7 +17,7 @@ IneqButton::IneqButton(int *loc, bool horizontal) {
 	this->emptyI = 0;
 	this->current = 0;
 	this->loc = loc;
-	setStyleSheet(QString("background-color: white; border: none; "));
+	setStyleSheet(QString("background-color: white; border: 1px solid black; "));
 	connect(this, SIGNAL(clicked()), this, SLOT(toggle()));
 	this->setFixedSize(QSize(25, 25));
 }
