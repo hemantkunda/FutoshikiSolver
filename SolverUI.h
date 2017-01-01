@@ -26,6 +26,7 @@
 
 #include "solver.h"
 #include "Grid.h"
+#include "Util.h"
 
 class SolverUI : public QWidget {
 	Q_OBJECT
@@ -54,6 +55,10 @@ private:
 	QPushButton *solveButton;
 	QPushButton *clearButton;
 	QPushButton *loadButton;
+	QString labelStyle;
+	QString buttonStyle;
+	QString comboboxStyle;
+	QString backgroundStyle;
 
 	int **board;
 	int size;

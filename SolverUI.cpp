@@ -1,6 +1,10 @@
 #include "SolverUI.h"
 
 SolverUI::SolverUI() {
+	buttonStyle = QString("background-color: yellow; color: black; ");
+	backgroundStyle = QString("background-color: black; ");
+	labelStyle = QString("color: yellow");
+	comboboxStyle = buttonStyle + QString("margin: 0; selection-color: red; ");
 	buildUI(4, true);
 }
 
@@ -34,20 +38,8 @@ std::string SolverUI::exportPuzzle() {
 			strftime(time, sizeof(time), "%d/%m/%Y %H-%M-%S", timeinfo);
 			name = std::string(time);
 		}
-		char *conv = new char[5] {' ', '<', '>', '^', 'v'};
 		filename = "puzzle_" + name;
-		std::ofstream out(filename + ".in");
-		for (int i = 0; i < 2 * size - 1; i++) {
-			for (int j = 0; j < 2 * size - 1; j++) {
-				if (i % 2 == 0 && j % 2 == 0) {
-					out << board[i][j];
-				}
-				else {
-					out << conv[board[i][j]];
-				}
-			}
-			out << "\n";
-		}
+		Util::writefile(filename + ".in", board, size);
 	}
 	delete dialog;
 	return filename;
@@ -101,62 +93,8 @@ void SolverUI::readfile(std::string filename) {
 		sizes->setCurrentIndex(newSize - 4);
 		sizes->blockSignals(false);
 	}
-	for (int i = 0; i < 2 * size - 1; i++) {
-		std::getline(in, line);
-		if (i % 2 == 0) {
-			for (int j = 0; j < 2 * size - 1; j++) {
-				if (j % 2 == 0) {
-					if (line[j] != ' ') {
-						board[i][j] = (int)(line[j] - '0');
-					}
-					else {
-						board[i][j] = 0;
-					}
-				}
-				else {
-					if (line[j] == ' ') {
-						board[i][j] = 0;
-					}
-					if (line[j] == '<') {
-						board[i][j] = 1;
-					}
-					if (line[j] == '>') {
-						board[i][j] = 2;
-					}
-					if (line[j] == '^') {
-						board[i][j] = 3;
-					}
-					if (line[j] == 'v') {
-						board[i][j] = 4;
-					}
-				}
-			}
-		}
-		else {
-			for (int j = 0; j < 2 * size - 1; j++) {
-				if (j % 2 == 0) {
-					if (line[j] == ' ') {
-						board[i][j] = 0;
-					}
-					if (line[j] == '<') {
-						board[i][j] = 1;
-					}
-					if (line[j] == '>') {
-						board[i][j] = 2;
-					}
-					if (line[j] == '^') {
-						board[i][j] = 3;
-					}
-					if (line[j] == 'v') {
-						board[i][j] = 4;
-					}
-				}
-				else {
-					board[i][j] = 0;
-				}
-			}
-		}
-	}
+	in.close();
+	Util::readfile(filename, board, size);
 	grid->reload();
 }
 
@@ -197,6 +135,7 @@ void SolverUI::buildUI(int size, bool init) {
 
 	title = new QLabel();
 	title->setText(QString("Futoshiki Solver"));
+	title->setStyleSheet(labelStyle);
 	settings->addWidget(title);
 
 	if (init) {
@@ -207,26 +146,31 @@ void SolverUI::buildUI(int size, bool init) {
 		sizes->addItem(QString("7x7"));
 		sizes->addItem(QString("8x8"));
 		sizes->addItem(QString("9x9"));
+		sizes->setStyleSheet(comboboxStyle);
 		connect(sizes, SIGNAL(currentIndexChanged(int)), this, SLOT(toggleSize(int)));
 	}
 	settings->addWidget(sizes);
 
 	solveButton = new QPushButton();
 	solveButton->setText(QString("Solve"));
+	solveButton->setStyleSheet(buttonStyle);
 	connect(solveButton, SIGNAL(clicked()), this, SLOT(solve()));
 	settings->addWidget(solveButton);
 
 	loadButton = new QPushButton();
 	loadButton->setText(QString("Load"));
+	loadButton->setStyleSheet(buttonStyle);
 	connect(loadButton, SIGNAL(clicked()), this, SLOT(load()));
 	settings->addWidget(loadButton);
 
 	clearButton = new QPushButton();
 	clearButton->setText(QString("Clear"));
+	clearButton->setStyleSheet(buttonStyle);
 	connect(clearButton, SIGNAL(clicked()), this, SLOT(clear()));
 	settings->addWidget(clearButton);
 
 	setLayout(layout);
+	setStyleSheet(backgroundStyle);
 	this->setWindowTitle(QString("Futoshiki Solver"));
 	this->show();
 }
