@@ -7,6 +7,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "Util.h"
+
 class Solver {
 public: 
 	

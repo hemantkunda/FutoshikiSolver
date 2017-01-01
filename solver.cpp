@@ -166,90 +166,22 @@ unsigned* Solver::constructCandidates(int r, int c) {
 }
 
 void Solver::readfile(unsigned size, std::string filename) {
-	std::ifstream in(filename);
-	std::string line;
-	std::getline(in, line);
-	for (unsigned i = 0; i < 2 * size - 1; i++) {
-		std::getline(in, line);
-		if (i % 2 == 0) {
-			for (unsigned j = 0; j < 2 * size - 1; j++) {
-				if (j % 2 == 0) {
-					if (line[j] != ' ') {
-						grid[i][j] = (int)(line[j] - '0');
-						constant[i][j] = (grid[i][j] != 0);
-					}
-					else {
-						grid[i][j] = 0;
-						constant[i][j] = false;
-					}
-				}
-				else {
-					constant[i][j] = true;
-					if (line[j] == ' ') {
-						grid[i][j] = 0;
-					}
-					if (line[j] == '<') {
-						grid[i][j] = 1;
-					}
-					if (line[j] == '>') {
-						grid[i][j] = 2;
-					}
-					if (line[j] == '^') {
-						grid[i][j] = 3;
-					}
-					if (line[j] == 'v') {
-						grid[i][j] = 4;
-					}
-				}
-			}
-		}
-		else {
-			for (unsigned j = 0; j < 2 * size - 1; j++) {
-				if (j % 2 == 0) {
-					if (line[j] == ' ') {
-						grid[i][j] = 0;
-					}
-					if (line[j] == '<') {
-						grid[i][j] = 1;
-					}
-					if (line[j] == '>') {
-						grid[i][j] = 2;
-					}
-					if (line[j] == '^') {
-						grid[i][j] = 3;
-					}
-					if (line[j] == 'v') {
-						grid[i][j] = 4;
-					}
-				}
-				else {
-					grid[i][j] = 0;
-				}
-				constant[i][j] = true;
-			}
+	Util::readfile(filename, grid, size);
+	for (unsigned r = 0; r < 2 * size - 1; r++) {
+		for (unsigned c = 0; c < 2 * size - 1; c++) {
+			constant[r][c] = (grid[r][c] != 0);
 		}
 	}
 }
 
 void Solver::output() {
-	std::ofstream out(outFile);
 	if (!solved) {
+		std::ofstream out(outFile);
 		out << "No solution\n";
+		out.close();
 		return;
 	}
-	out << size << "\n";
-	char *conv = new char[5] {' ', '<', '>', '^', 'v'};
-	for (unsigned i = 0; i < 2 * size - 1; i++) {
-		for (unsigned j = 0; j < 2 * size - 1; j++) {
-			if (i % 2 == 0 && j % 2 == 0) {
-				out << solution[i][j];
-			}
-			else {
-				out << conv[solution[i][j]];
-			}
-		}
-		out << "\n";
-	}
+	Util::writefile(outFile, solution, size);
 }
 
 
