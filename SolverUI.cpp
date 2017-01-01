@@ -1,10 +1,10 @@
 #include "SolverUI.h"
 
 SolverUI::SolverUI() {
-	buttonStyle = QString("background-color: yellow; color: black; ");
-	backgroundStyle = QString("background-color: black; ");
-	labelStyle = QString("color: yellow");
-	comboboxStyle = buttonStyle + QString("margin: 0; selection-color: red; ");
+	buttonStyle = QString("background-color: red; color: white; ");
+	backgroundStyle = QString("background-color: white; ");
+	labelStyle = QString("color: red");
+	comboboxStyle = buttonStyle + QString("margin: 0; selection-color: yellow; ");
 	buildUI(4, true);
 }
 
@@ -56,7 +56,19 @@ void SolverUI::clear() {
 
 void SolverUI::load() {
 	QString fileName = QFileDialog::getOpenFileName(this, QString("Open..."), ".");
-	readfile(fileName.toStdString());
+	if (Util::verify(fileName.toStdString(), size)) {
+		readfile(fileName.toStdString());
+	}
+	else {
+		QMessageBox *message = new QMessageBox();
+		message->setStandardButtons(QMessageBox::Ok);
+		message->button(QMessageBox::Ok)->setStyleSheet("background-color: red; color: white;");
+		message->setWindowTitle(QString("Error"));
+		message->setText(QString("Error - Invalid file format."));
+		message->setStyleSheet("color: red;");
+		message->exec();
+		delete message;
+	}
 }
 
 void SolverUI::solve() {
@@ -72,7 +84,10 @@ void SolverUI::solve() {
 	std::getline(in, line);
 	if (line[0] == 'N') {
 		QMessageBox *message = new QMessageBox();
-		message->setText("The inputted puzzle has no solution.");
+		message->setStandardButtons(QMessageBox::Ok);
+		message->button(QMessageBox::Ok)->setStyleSheet("background-color: red; color: white;");
+		message->setWindowTitle(QString("Alert"));
+		message->setText(QString("The inputted puzzle has no solution."));
 		message->exec();
 		delete message;
 		return;
